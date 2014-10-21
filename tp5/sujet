@@ -1,0 +1,159 @@
+.lf 1 -
+.lf 1 stdin
+.TH "Atelier" L2 "12 novembre 2013" "L2 informatique" "TP5 \[u2014] Gestion de versions I"
+
+
+.SH TP5 \[u2014] GESTION DE VERSIONS I
+
+.SH 1. diff et patch
+
+.P
+Bob a \[u00E9]crit un programme Java \fItp5/diff\-patch/Pendu.java\fR permettant de jouer au pendu \[u00E0] partir de la liste de mots du syst\[u00E8]me \fI/usr/share/dict/words\fR. Compilez\-le, lancez\-le (plusieurs fois) et observez son fonctionnement :
+
+.nf
+$ javac Pendu.java
+$ java Pendu
+.fi
+
+
+.P
+Alice s'est rendu compte en jouant que Bob avait fait des erreurs que vous aurez peut\-\[u00EA]tre constat\[u00E9]es : le g\[u00E9]n\[u00E9]rateur al\[u00E9]atoire commence toujours par la m{\e^e}me valeur, ainsi le programme tire "al\[u00E9]atoirement" toujours les m\[u00EA]mes mots, et il y a des f\[u00F4]tes d'orthographe. Pour corriger les erreurs, elle envoie un patch \fIpatch_v0\-1\fR \[u00E0] Bob. Appliquez ce patch au programme :
+
+.nf
+$ patch Pendu.java patch_v0-1
+.fi
+
+
+.P
+Bob s'apper\[u00E7]oit que le patch a \[u00E9]cras\[u00E9] son fichier original. Lisez les options de \fBpatch\fR dans le manuel. Quelle option aurait\-il d\[u00FB] utiliser pour garder une copie de sauvegarde ? Que font les commandes suivantes ?
+
+.nf
+$ cp Pendu.java Pendu_v0.java
+$ patch -R Pendu_v0.java patch_v0-1
+.fi
+
+
+.P
+Bob dispose maintenant de la version d'Alice sous le nom \fIPendu.java\fR et de sa version originale sous le nom \fIPendu_v0.java\fR. Observez que le contenu du fichier \fIpatch_v0\-1\fR envoy\[u00E9] par Alice n'est autre que le r\[u00E9]sultat de la commande \fBdiff\fR appliqu\[u00E9]e \[u00E0] ces deux fichiers \fBdans le bon ordre\fR. Faites maintenant un \fBdiff\fR \fIcontextuel\fR, puis \fIunifi\[u00E9]\fR (options \fB\-c\fR et \fB\-u\fR) puis un \fBdiff \-y\fR (ou \fBsdiff\fR) pour visualiser les diff\[u00E9]rences entre les deux versions de diff\[u00E9]rentes mani\[u00E8]res.
+
+.P
+\fBRemarque.\fR \fBpatch\fR fonctionne aussi bien avec les diff\[u00E9]rents formats de \fBdiff\fR et devine tout seul celui qui a \[u00E9]t\[u00E9] utilis\[u00E9]. Remarquez tout de m\[u00EA]me que suivant le format utilis\[u00E9], la quantit\[u00E9] et l'\[u00E9]parpillement des modifications, la taille du patch peut facilement exc\[u00E9]der la taille du fichier patch\[u00E9]...
+
+.P
+Alice souhaite pouvoir utiliser une liste de mots personnalis\[u00E9]e, elle envoie pour cela un nouveau patch \fIpatch_v1\-2\fR \[u00E0] Bob. Appliquez ce patch \[u00E0] la version 1 du programme (en faisant attention \[u00E0] bien en garder une sauvegarde sous le nom Pendu_v1.java), et testez la nouvelle version patch\[u00E9]e.
+
+.P
+Fabriquez un patch \fIpatch_v0\-2\fR permettant de passer directement de la version 0 du programme \[u00E0] la version 2 (c'est\-\[u00E0]\-dire combinant les 2 patchs d'Alice) et v\[u00E9]rifiez qu'il fonctionne.
+
+.SH 2. Git
+
+.P
+Dans ce premier TP sur Git, nous nous contenterons de travailler en \fIlocal\fR, c'est\-\[u00E0]\-dire que pour l'instant, les modifications des d\[u00E9]p\[u00F4]ts ne seront pas import\[u00E9]es/export\[u00E9]es en dehors du d\[u00E9]p\[u00F4]t (ou \fIclone\fR) de travail.
+
+.SS 2.1. Cr\[u00E9]ation d'un d\[u00E9]p\[u00F4]t
+
+.P
+Dans cette section nous allons cr\[u00E9]er un d\[u00E9]p\[u00F4]t ex nihilo et apprendre \[u00E0] utiliser les commandes Git de base.
+
+.P
+Cr\[u00E9]ez un r\[u00E9]pertoire vide \fIenerGit\fR. Rendez\-vous dans ce r\[u00E9]pertoire et faites\-en un d\[u00E9]p\[u00F4]t Git en lan\[u00E7]ant \fBgit init\fR. Remarquez avec \fBls \-a\fR qu'un r\[u00E9]pertoire \fI.git\fR est apparu.
+
+.P
+Copiez tous les fichiers utilis\[u00E9]s lors de la section pr\[u00E9]c\[u00E9]dente de ce TP (sur diff et patch) dans ce r\[u00E9]pertoire. Lancez \fBgit status\fR et observez le rapport fourni par Git. Les fichiers ne sont pour l'instant pas suivis (\fIuntracked\fR) par Git. Pour les ajouter lancez \fBgit add *\fR. Lancez de nouveau \fBgit status\fR pour observer le changement du rapport. Les fichiers sont maintenant suivis (\fItracked\fR) par Git et ont \[u00E9]t\[u00E9] ajout\[u00E9]s \[u00E0] la liste des modifications \[u00E0] prendre en compte (\fIstaged\fR) lors du prochain enregistrement, mais aucun enregistrement (commit) n'a encore \[u00E9]t\[u00E9] fait. Pour faire votre premier enregistrement :
+
+.nf
+$ git commit -m "Premier commit"
+.fi
+
+
+.P
+\fBRemarque.\fR Git peut refuser votre commit et vous demander au pr\[u00E9]alable de configurer votre nom d'utilisateur et/ou adresse mail... Ajoutons au passage la prise en charge de la coloration.
+
+.nf
+$ git config --global user.name "Jeannot Lapin"
+$ git config --global user.email "jeannot.lapin@basse-cour.fr"
+$ git config --global --add color.ui true
+.fi
+
+
+.P
+Il faut voir Git comme un mini\-syst\[u00E8]me de fichiers dont chaque commit contient le clich\[u00E9] pris \[u00E0] un instant donn\[u00E9] des fichiers du syst\[u00E8]me.
+
+.P
+Modifiez le contenu d'un des fichiers et lancez de nouveau \fBgit status\fR. Le fichier \[u00E9]tant suivi (\fItracked\fR) par Git, il est reconnu comme modifi\[u00E9] dans le rapport, mais ses modifications ne seront \fBpas\fR prises en compte lors du prochain enregistrement ! Pour les prendre en compte, il faut de nouveau ajouter le fichier avec \fBgit add\fR (afin de faire passer le fichier dans l'\[u00E9]tat \fIstaged\fR) puis valider avec \fBgit commit\fR. 
+
+.P
+Modifiez de nouveau un fichier suivi, ajoutez\-le avec \fBgit add\fR, puis modifiez\-le de nouveau. Lancez \fBgit status\fR, comment interpr\[u00E9]ter ce rapport ? En l'\[u00E9]tat, quelle version du fichier sera enregistr\[u00E9]e lors du prochain \fBgit commit\fR ?
+
+.P
+Essayez maintenant de retirer un fichier du suivi de Git avec chacune des trois commandes suivantes (mais n'en utilisez qu'\fBune seule \[u00E0] la fois\fR) :
+
+.nf
+$ git rm mon_fichier
+$ rm mon_fichier
+$ git rm --cached mon_fichier
+.fi
+
+
+.P
+Identifiez les diff\[u00E9]rences (pensez \[u00E0] \fBgit status\fR). Pour restaurer le fichier, vous pouvez dans tous les cas faire :
+
+.nf
+$ git checkout HEAD -- mon_fichier
+.fi
+
+
+.P
+\fBHEAD\fR d\[u00E9]signe toujours la r\[u00E9]vision courante du d\[u00E9]p\[u00F4]t. Ajoutez des fichiers et/ou effectuez des modifications et enregistrez\-les avec \fBgit commit\fR. R\[u00E9]petez cela 3\-4 fois. Le dernier commit peut \[u00EA]tre identifi\[u00E9] par \fBHEAD\fR, le pr\[u00E9]c\[u00E9]dent par \fBHEAD^\fR, celui d'avant par \fBHEAD^^\fR et l'on peut remonter au \fIn\fRi\[u00E8]me parent avec \fBHEAD~\fIn\fR\fR. Mais d'une mani\[u00E8]re g\[u00E9]n\[u00E9]rale, les commits sont identifi\[u00E9]s par leur hash SHA1.
+
+.P
+Lancez \fBgit log\fR pour afficher la liste des commits.
+
+.P
+Visualisez les diff\[u00E9]rences entre les diff\[u00E9]rents commits \[u00E0] l'aide de :
+
+.nf
+$ git diff <commit1> <commit2>
+.fi
+
+
+.P
+o\[u00F9] \fB<commit1>\fR et \fB<commit2>\fR d\[u00E9]signent soit des identifiants complets (hash SHA1 de 40 chiffres hexad\[u00E9]cimaux) de commits, soit des pr\[u00E9]fixes de ces identifiants (g\[u00E9]n\[u00E9]ralement les 5 \[u00E0] 7 premiers caract\[u00E8]res sont suffisants pour identifier de fa\[u00E7]on unique un commit, m\[u00EA]me sur de tr\[u00E8]s gros projets), soit des raccourcis des formes \[u00E9]voqu\[u00E9]es pr\[u00E9]c\[u00E9]demment (HEAD, HEAD^, etc), soit des \fBtags\fR de commit (on y reviendra), soit des noms de branches (cf section suivante)...
+
+.SS 2.2. Analyse d'un d\[u00E9]p\[u00F4]t existant
+
+.P
+R\[u00E9]cup\[u00E9]rons maintenant un d\[u00E9]p\[u00F4]t en ligne :
+
+.nf
+$ export https_proxy=$http_proxy
+$ git clone https://github.com/mexgit/aliceetbob.git
+.fi
+
+
+.P
+\fBRemarque.\fR Observez que le d\[u00E9]p\[u00F4]t local garde trace du d\[u00E9]p\[u00F4]t distant \[u00E0] l'aide de \fBgit remote \-v\fR. Cela permettra d'importer/exporter des commits depuis/vers ce d\[u00E9]p\[u00F4]t, mais nous y reviendrons plus tard...
+
+.P
+Alice et Bob ont travaill\[u00E9] dans ce d\[u00E9]p\[u00F4]t. Par d\[u00E9]finition m\[u00EA]me, les commits au sein d'une m\[u00EA]me branche doivent \[u00EA]tre lin\[u00E9]aires. Pour que son travail n'entre jamais en conflit avec celui de Bob, Alice a pr\[u00E9]f\[u00E9]r\[u00E9] travailler dans une branche parall\[u00E8]le \fIaliceatwork\fR, tandis que Bob travaillait dans la branche initiale \fImaster\fR.
+
+.P
+Listez les branches \[u00E0] l'aide de \fBgit branch \-a\fR. Vous pouvez changer de branche via \fBgit checkout ma_branche\fR. \[u00C0] l'aide du cours et des commandes rencontr\[u00E9]es pr\[u00E9]c\[u00E9]demment, analysez compl\[u00E8]tement le d\[u00E9]p\[u00F4]t et reconstituez le graphe (DAG) des commits.
+
+.P
+Identifiez les diff\[u00E9]rences (pensez \[u00E0] \fBgit diff\fR) entre les derniers commits de chacune des deux branches. Quel fichier comporte un \[u00E9]ventuel conflit entre branches ?
+
+.P
+Fusionnez maintenant la branche \fIaliceatwork\fR \[u00E0] la branche \fImaster\fR :
+
+.nf
+$ git checkout master
+$ git merge aliceatwork
+.fi
+
+
+.P
+Observez la mani\[u00E8]re dont le conflit a \[u00E9]t\[u00E9] g\[u00E9]r\[u00E9] (et partiellement r\[u00E9]solu). Quel est le nouveau graphe des commits ?
+
+.\" man code generated by txt2tags 2.6 (http://txt2tags.org)
+.\" cmdline: txt2tags -o - tp5.t2t

@@ -1,0 +1,20 @@
+9c9
+< 	Random alea=new Random(0);
+---
+> 	Random alea=new Random();
+58c58
+< 			System.out.println(new String(masque)+" -- "+essais+ "essay(s) resttant(s)" );
+---
+> 			System.out.println(new String(masque)+" -- "+essais+ "essai(s) restant(s)" );
+61c61
+< 				System.out.println("Letre (a-z ou Q pour kitter) ? ");
+---
+> 				System.out.println("Lettre (a-z ou Q pour quitter) ? ");
+64c64
+< 					System.out.println("Fin de paaartye");
+---
+> 					System.out.println("Fin de partie");
+85c85
+< 		System.out.println(new String( mot)+ " -- Predu !\n");
+---
+> 		System.out.println(new String( mot)+ " -- Perdu !\n");

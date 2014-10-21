@@ -1,0 +1,4 @@
+92c92
+< 			Pendu p=new Pendu("/usr/share/dict/words");
+---
+> 			Pendu p=new Pendu("./mots");
